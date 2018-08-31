@@ -7,6 +7,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestToKlingonEmptyString(t *testing.T) {
+
+	translated, err := ToKlingon("")
+	assert.Equal(t, "", translated)
+	assert.EqualError(t, err, "Not translatable")
+
+}
+
 func TestToKlingonDictionary(t *testing.T) {
 
 	cases := []string{

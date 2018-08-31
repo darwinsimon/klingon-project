@@ -51,6 +51,11 @@ var dictionary = map[string]string{
 // If the value isn't translatable, error will be given
 func ToKlingon(value string) (string, error) {
 
+	// Return error for empty string
+	if value == "" {
+		return "", errors.New("Not translatable")
+	}
+
 	translated := []string{}
 
 	// Total length of the string
