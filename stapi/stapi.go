@@ -110,6 +110,8 @@ func (s Stapi) getCharacter(uid string) (*charResponse, StapiError) {
 // Hit Stapi.co REST API
 func (s Stapi) restRequest(method string, path string, body io.Reader) ([]byte, error) {
 
+	log.Println("Start requesting to", path)
+
 	// Prepare request
 	req, err := http.NewRequest(method, RESTURL+path, body)
 	if err != nil {
@@ -142,7 +144,7 @@ func (s Stapi) restRequest(method string, path string, body io.Reader) ([]byte, 
 		return nil, err
 	}
 
-	log.Println("RESULT")
+	log.Println("Result for", path)
 	log.Println("----------------------------------")
 	log.Println(string(content))
 	log.Println("----------------------------------")
