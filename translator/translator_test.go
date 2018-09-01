@@ -47,7 +47,7 @@ func TestToKlingonInvalidCharacter(t *testing.T) {
 
 }
 
-func TestToKlingonSuccess(t *testing.T) {
+func TestToKlingonSuccessful(t *testing.T) {
 
 	translated, err := ToKlingon("Test")
 	assert.Equal(t, "0xF8E3 0xF8D4 0xF8E2 0xF8E3", translated)
