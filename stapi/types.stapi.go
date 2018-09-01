@@ -19,8 +19,9 @@ type Stapi struct {
 
 // Character of Star Trek
 type Character struct {
-	Name    string
-	Species string
+	UID     string `json:"uid"`
+	Name    string `json:"name"`
+	Species string `json:"species"`
 }
 
 // Rest API Response struct

@@ -11,6 +11,26 @@ import (
 	"strings"
 )
 
+var savedChar map[string]*Character
+
+func init() {
+
+	// Read from saved file
+	if textData, err := ioutil.ReadFile("./char.txt"); err == nil {
+		if err = json.Unmarshal(textData, &savedChar); err != nil {
+			// Failed to read saved file -- initialize with empty savedChar
+			savedChar = map[string]*Character{}
+			log.Println(err)
+		} else {
+			log.Println(savedChar)
+		}
+	} else {
+		log.Println(err)
+		// No saved file -- initialize with empty savedChar
+		savedChar = map[string]*Character{}
+	}
+}
+
 // CharacterSearch by name
 func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 
@@ -18,12 +38,12 @@ func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 	characterSearchPath := "/character/search"
 
 	// Remove excess spaces and set it to lower case
-	trimmedName := strings.ToLower(strings.Trim(name, " "))
+	cleanName := strings.ToLower(strings.Trim(name, " "))
 
 	// Set POST form for API call
 	form := url.Values{}
-	form.Add("name", trimmedName)
-	form.Add("title", trimmedName)
+	form.Add("name", cleanName)
+	form.Add("title", cleanName)
 	body := strings.NewReader(form.Encode())
 
 	// Hit stapi.co API -- return ErrorCharacterNotFound if error
@@ -43,7 +63,6 @@ func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 	// Convert API response to struct -- return ErrorCharacterNotFound if error
 	if err = json.Unmarshal(response, &result); err != nil {
 		log.Println("[ERR] CharacterSearch", err)
-		return nil, ErrorCharacterNotFound
 	}
 
 	// If the results have exceed the limit, return error
@@ -57,6 +76,13 @@ func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 	If the character has multiple species, system will pick the first species
 	*/
 	for c := range result.Characters {
+
+		// Check the saved file before hitting stapi.co
+		if savedChar[cleanName] != nil {
+			log.Println("[INFO] Use cached result for", name)
+			return savedChar[cleanName], ErrorNone
+		}
+
 		// Assert the name of the character
 		var selectedChar = Character{
 			Name: result.Characters[c].Name,
@@ -71,8 +97,22 @@ func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 		// The selected characters has species information
 		if len(detailChar.Species) > 0 {
 
-			// Assert from the first species
+			// Assert information to selectedChar
 			selectedChar.Species = detailChar.Species[0].Name
+			selectedChar.UID = detailChar.UID
+
+			// Update character saved file
+			savedChar[cleanName] = &selectedChar
+			encoded, err := json.Marshal(savedChar)
+			if err != nil {
+				// Encoding failed -- skip updating saved file
+				log.Println("[ERR] CharacterSearch", err)
+			} else {
+				if err = ioutil.WriteFile("char.txt", encoded, 0644); err != nil {
+					// Saving file failed -- skip updating saved file
+					log.Println("[ERR] CharacterSearch", err)
+				}
+			}
 
 			return &selectedChar, ErrorNone
 		}
@@ -110,7 +150,7 @@ func (s Stapi) getCharacter(uid string) (*charResponse, StapiError) {
 // Hit Stapi.co REST API
 func (s Stapi) restRequest(method string, path string, body io.Reader) ([]byte, error) {
 
-	log.Println("Start requesting to", path)
+	log.Println("[INFO] Start requesting to", path)
 
 	// Prepare request
 	req, err := http.NewRequest(method, RESTURL+path, body)
@@ -144,7 +184,7 @@ func (s Stapi) restRequest(method string, path string, body io.Reader) ([]byte, 
 		return nil, err
 	}
 
-	log.Println("Result for", path)
+	log.Println("[INFO] Response from", path)
 	log.Println("----------------------------------")
 	log.Println(string(content))
 	log.Println("----------------------------------")
