@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/darwinsimon/klingon-project/stapi"
 	"github.com/darwinsimon/klingon-project/translator"
@@ -17,7 +18,8 @@ func main() {
 	args := os.Args
 	var param = ""
 	if len(args) > 1 {
-		param = args[1]
+		// Join multiple params as a single name
+		param = strings.Join(args[1:], " ")
 	}
 
 	// Return explanation if there's no parameter
@@ -27,10 +29,14 @@ func main() {
 		return
 	}
 
+	// Translate name to klingon
 	translated, err := translator.ToKlingon(param)
 	if err != nil {
+		// Failed
 		fmt.Println("Your input name can't be translated")
 	} else {
+		// Successful
+		fmt.Println()
 		fmt.Println("Processing...")
 		fmt.Println()
 
@@ -48,7 +54,7 @@ func getSpecies(param string) string {
 	stapiModule := stapi.Stapi{}
 	character, charErr := stapiModule.CharacterSearch(param)
 
-	// Success -- print the species name
+	// Successful -- print the species name
 	if character != nil && charErr == stapi.ErrorNone {
 		return character.Species
 	}
