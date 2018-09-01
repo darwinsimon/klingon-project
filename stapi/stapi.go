@@ -5,10 +5,11 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/darwinsimon/klingon-project/logging"
 )
 
 var savedChar map[string]*Character
@@ -20,12 +21,8 @@ func init() {
 		if err = json.Unmarshal(textData, &savedChar); err != nil {
 			// Failed to read saved file -- initialize with empty savedChar
 			savedChar = map[string]*Character{}
-			log.Println(err)
-		} else {
-			log.Println(savedChar)
 		}
 	} else {
-		log.Println(err)
 		// No saved file -- initialize with empty savedChar
 		savedChar = map[string]*Character{}
 	}
@@ -49,7 +46,7 @@ func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 	// Hit stapi.co API -- return ErrorCharacterNotFound if error
 	response, err := s.restRequest(http.MethodPost, characterSearchPath, body)
 	if err != nil {
-		log.Println("[ERR] CharacterSearch", err)
+		logging.Println("[ERR] CharacterSearch", err)
 		return nil, ErrorCharacterNotFound
 	}
 
@@ -62,7 +59,7 @@ func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 
 	// Convert API response to struct -- return ErrorCharacterNotFound if error
 	if err = json.Unmarshal(response, &result); err != nil {
-		log.Println("[ERR] CharacterSearch", err)
+		logging.Println("[ERR] CharacterSearch", err)
 	}
 
 	// If the results have exceed the limit, return error
@@ -79,7 +76,7 @@ func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 
 		// Check the saved file before hitting stapi.co
 		if savedChar[cleanName] != nil {
-			log.Println("[INFO] Use cached result for", name)
+			logging.Println("[INFO] Use cached result for", name)
 			return savedChar[cleanName], ErrorNone
 		}
 
@@ -106,11 +103,11 @@ func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 			encoded, err := json.Marshal(savedChar)
 			if err != nil {
 				// Encoding failed -- skip updating saved file
-				log.Println("[ERR] CharacterSearch", err)
+				logging.Println("[ERR] CharacterSearch", err)
 			} else {
 				if err = ioutil.WriteFile("char.txt", encoded, 0644); err != nil {
 					// Saving file failed -- skip updating saved file
-					log.Println("[ERR] CharacterSearch", err)
+					logging.Println("[ERR] CharacterSearch", err)
 				}
 			}
 
@@ -131,7 +128,7 @@ func (s Stapi) getCharacter(uid string) (*charResponse, StapiError) {
 	// Hit stapi.co API -- return ErrorCharacterNotFound if error
 	response, err := s.restRequest(http.MethodGet, characterSearchPath, nil)
 	if err != nil {
-		log.Println("[ERR] getCharacter", err)
+		logging.Println("[ERR] getCharacter", err)
 		return nil, ErrorCharacterNotFound
 	}
 	var result = struct {
@@ -140,7 +137,7 @@ func (s Stapi) getCharacter(uid string) (*charResponse, StapiError) {
 
 	// Convert API response to struct -- return ErrorCharacterNotFound if error
 	if err = json.Unmarshal(response, &result); err != nil {
-		log.Println("[ERR] getCharacter", err)
+		logging.Println("[ERR] getCharacter", err)
 		return nil, ErrorCharacterNotFound
 	}
 
@@ -150,19 +147,19 @@ func (s Stapi) getCharacter(uid string) (*charResponse, StapiError) {
 // Hit Stapi.co REST API
 func (s Stapi) restRequest(method string, path string, body io.Reader) ([]byte, error) {
 
-	log.Println("[INFO] Start requesting to", path)
+	logging.Println("[INFO] Start requesting to", path)
 
 	// Prepare request
 	req, err := http.NewRequest(method, RESTURL+path, body)
 	if err != nil {
-		log.Println("[ERR] restRequest", err)
+		logging.Println("[ERR] restRequest", err)
 		return nil, err
 	}
 
 	// Hit the API
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Println("[ERR] restRequest", err)
+		logging.Println("[ERR] restRequest", err)
 		return nil, err
 	}
 
@@ -173,21 +170,21 @@ func (s Stapi) restRequest(method string, path string, body io.Reader) ([]byte, 
 
 	if resp.StatusCode != 200 {
 		err = errors.New("Status Not OK")
-		log.Println("[ERR] restRequest", err)
+		logging.Println("[ERR] restRequest", err)
 		return nil, err
 	}
 
 	// Process the response
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Println("[ERR] restRequest", err)
+		logging.Println("[ERR] restRequest", err)
 		return nil, err
 	}
 
-	log.Println("[INFO] Response from", path)
-	log.Println("----------------------------------")
-	log.Println(string(content))
-	log.Println("----------------------------------")
+	logging.Println("[INFO] Response from", path)
+	logging.Println("----------------------------------")
+	logging.Println(string(content))
+	logging.Println("----------------------------------")
 
 	return content, err
 }

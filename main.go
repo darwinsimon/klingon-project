@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -10,17 +11,24 @@ import (
 	"github.com/darwinsimon/klingon-project/translator"
 )
 
-func main() {
+func init() {
 	// Add timestamp and filename in the logging
 	log.SetFlags(log.LstdFlags | log.Llongfile)
 
-	// Get input parameter
-	args := os.Args
-	var param = ""
-	if len(args) > 1 {
-		// Join multiple params as a single name
-		param = strings.Join(args[1:], " ")
+	flagV := flag.Bool("v", false, "print debug logs")
+	flag.Parse()
+
+	// Set global environment
+	if *flagV {
+		os.Setenv("PRINTLOG", "TRUE")
 	}
+}
+
+func main() {
+
+	// Get input parameter
+	// Join multiple params as a single name
+	var param = strings.Join(flag.Args(), " ")
 
 	// Return explanation if there's no parameter
 	if param == "" {
