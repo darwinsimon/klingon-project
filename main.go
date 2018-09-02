@@ -15,16 +15,21 @@ func init() {
 	// Add timestamp and filename in the logging
 	log.SetFlags(log.LstdFlags | log.Llongfile)
 
+	// Set flags
 	flagV := flag.Bool("v", false, "print debug logs")
 	flag.Parse()
 
-	// Set global environment
+	// Set global environment enable verbose logging
 	if *flagV {
 		os.Setenv("PRINTLOG", "TRUE")
 	}
 }
 
 func main() {
+	fmt.Println()
+	fmt.Println("KLINGON PROJECT")
+	fmt.Println("---------------")
+	fmt.Println()
 
 	// Get input parameter
 	// Join multiple params as a single name
@@ -33,7 +38,8 @@ func main() {
 	// Return explanation if there's no parameter
 	if param == "" {
 		fmt.Println("Please enter any name as parameter")
-		fmt.Println("Example: ./klingon-project Uhura")
+		fmt.Println("Example: Uhura")
+		fmt.Println()
 		return
 	}
 
@@ -41,16 +47,18 @@ func main() {
 	translated, err := translator.ToKlingon(param)
 	if err != nil {
 		// Failed
-		fmt.Println("Your input name can't be translated")
+		fmt.Println("Input          :", param)
+		fmt.Println("Klingon Name   : Can't be translated")
+		fmt.Println()
 	} else {
 		// Successful
-		fmt.Println()
 		fmt.Println("Processing...")
 		fmt.Println()
 
 		// Print the species information
 		speciesResult := getSpecies(param)
 
+		fmt.Println("Input          :", param)
 		fmt.Println("Klingon Name   :", translated)
 		fmt.Println("Species        :", speciesResult)
 		fmt.Println()

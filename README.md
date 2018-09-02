@@ -11,18 +11,26 @@ Valid species information will be stored in `char.txt` to reduce API calls for t
 
 ### Build
 - Install Go. Downloads and instructions are available [here](https://golang.org/dl/).
-- Run `go get` and `go build` in repository main folder
+- For windows, Run `go get` and `go build` in repository main folder
+- For unix, run `make`
 
 ### Run
 Run the application with character's name as parameter
 ```bash
 ./klingon-project Uhura
 
+KLINGON PROJECT
+---------------
+
 Processing...
 
+Input          : Uhura
 Klingon Name   : 0xF8E5 0xF8D6 0xF8E5 0xF8E1 0xF8D0
 Species        : Human
 ```
+
+### Flags
+Add `-v` for verbose logging
 
 ## Restrictions
 - Translation will fail if the name consists any unavailable characters (c, g, k, x, z, etc.)
