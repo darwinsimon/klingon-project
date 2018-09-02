@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	. "github.com/darwinsimon/klingon-project/stapi"
+	. "github.com/darwinsimon/klingon-project/resource/stapi"
 )
 
 var s = Stapi{}

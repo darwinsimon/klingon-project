@@ -4,7 +4,8 @@ import (
 	"os"
 	"testing"
 
-	. "github.com/darwinsimon/klingon-project/stapi"
+	"github.com/darwinsimon/klingon-project/resource"
+	. "github.com/darwinsimon/klingon-project/resource/stapi"
 	"github.com/h2non/gock"
 	"github.com/stretchr/testify/assert"
 )
@@ -17,7 +18,7 @@ func TestCharacterSearchFailedToHitAPI(t *testing.T) {
 
 	character, err := s.CharacterSearch("Foo")
 	assert.Nil(t, character)
-	assert.Equal(t, ErrorCharacterNotFound, err)
+	assert.Equal(t, resource.ErrorCharacterNotFound, err)
 
 }
 
@@ -29,7 +30,7 @@ func TestCharacterSearchFailedToReadJSON(t *testing.T) {
 
 	character, err := s.CharacterSearch("Foo")
 	assert.Nil(t, character)
-	assert.Equal(t, ErrorCharacterNotFound, err)
+	assert.Equal(t, resource.ErrorCharacterNotFound, err)
 
 }
 
@@ -43,7 +44,7 @@ func TestCharacterSearchExceedLimit(t *testing.T) {
 
 	character, err := s.CharacterSearch("foo")
 	assert.Nil(t, character)
-	assert.Equal(t, ErrorTooManyResults, err)
+	assert.Equal(t, resource.ErrorTooManyResults, err)
 
 }
 
@@ -57,7 +58,7 @@ func TestCharacterSearchNotFound(t *testing.T) {
 
 	character, err := s.CharacterSearch("foo")
 	assert.Nil(t, character)
-	assert.Equal(t, ErrorCharacterNotFound, err)
+	assert.Equal(t, resource.ErrorCharacterNotFound, err)
 
 }
 
@@ -73,7 +74,7 @@ func TestCharacterSearchFailedGetSpecies(t *testing.T) {
 
 	character, err := s.CharacterSearch("Jean-Luc Picard")
 	assert.Nil(t, character)
-	assert.Equal(t, ErrorCharacterNotFound, err)
+	assert.Equal(t, resource.ErrorCharacterNotFound, err)
 
 }
 
@@ -92,7 +93,7 @@ func TestCharacterSearchFound2Results(t *testing.T) {
 	assert.NotNil(t, character)
 	assert.Equal(t, "Jean-Luc Picard", character.Name)
 	assert.Equal(t, "Human", character.Species)
-	assert.Equal(t, ErrorNone, err)
+	assert.Equal(t, resource.ErrorNone, err)
 
 	// Remove testing file
 	os.Remove("char.txt")
@@ -111,9 +112,16 @@ func TestCharacterSearchFoundFromCache(t *testing.T) {
 	assert.NotNil(t, character)
 	assert.Equal(t, "Darwin", character.Name)
 	assert.Equal(t, "Human", character.Species)
-	assert.Equal(t, ErrorNone, err)
+	assert.Equal(t, resource.ErrorNone, err)
 
 	// Remove testing file
 	os.Remove("char.txt")
 
+}
+
+func TestUpdateCharacterFileSuccess(t *testing.T) {
+	assert.Nil(t, UpdateCharacterFile())
+
+	// Remove testing file
+	os.Remove("char.txt")
 }

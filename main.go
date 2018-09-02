@@ -7,7 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/darwinsimon/klingon-project/stapi"
+	"github.com/darwinsimon/klingon-project/knowledge"
+	"github.com/darwinsimon/klingon-project/resource/stapi"
 	"github.com/darwinsimon/klingon-project/translator"
 )
 
@@ -55,36 +56,18 @@ func main() {
 		fmt.Println("Processing...")
 		fmt.Println()
 
-		// Print the species information
-		speciesResult := getSpecies(param)
+		// Print informations -- use stapi resource
+		stapiModule := stapi.Stapi{}
+		infos := knowledge.Get(param, stapiModule)
 
-		fmt.Println("Input          :", param)
-		fmt.Println("Klingon Name   :", translated)
-		fmt.Println("Species        :", speciesResult)
+		fmt.Printf("%-20s : %s\n", "Input", param)
+		fmt.Printf("%-20s : %s\n", "Klingon Name", translated)
+
+		for i := range infos {
+			fmt.Println(infos[i])
+		}
+
 		fmt.Println()
 
 	}
-}
-
-func getSpecies(param string) string {
-	stapiModule := stapi.Stapi{}
-	character, charErr := stapiModule.CharacterSearch(param)
-
-	// Successful -- print the species name
-	if character != nil && charErr == stapi.ErrorNone {
-		return character.Species
-	}
-
-	// Failed
-	switch charErr {
-	case stapi.ErrorTooManyResults:
-		// Too many results
-		return "Can't get species information. Your name is too common."
-	case stapi.ErrorCharacterNotFound:
-		// Character not found
-		return "No information"
-	default:
-		return "An error occurred when retrieving the species information"
-	}
-
 }

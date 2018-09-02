@@ -5,9 +5,6 @@ import (
 	"time"
 )
 
-// Error type for Stapi.co API Calls
-type Error int
-
 // Use global client to prevent increasing open files
 var client = http.Client{
 	// Set 10 seconds timeout
@@ -18,18 +15,13 @@ var client = http.Client{
 type Stapi struct {
 }
 
-// Character of Star Trek
-type Character struct {
-	UID     string `json:"uid"`
-	Name    string `json:"name"`
-	Species string `json:"species"`
-}
-
 // Rest API Response struct
 type charResponse struct {
-	UID     string            `json:"uid"`
-	Name    string            `json:"name"`
-	Species []speciesResponse `json:"characterSpecies"`
+	UID         string            `json:"uid"`
+	Name        string            `json:"name"`
+	Species     []speciesResponse `json:"characterSpecies"`
+	Gender      string            `json:"gender"`
+	YearOfBirth int               `json:"yearOfBirth"`
 }
 
 // Species of Star Trek character
