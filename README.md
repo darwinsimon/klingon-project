@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/darwinsimon/klingon-project/badge.svg?branch=master)](https://coveralls.io/github/darwinsimon/klingon-project?branch=master)
+[![Build Status](https://travis-ci.org/darwinsimon/klingon-project.svg?branch=master)](https://travis-ci.org/darwinsimon/klingon-project) [![Coverage Status](https://coveralls.io/repos/github/darwinsimon/klingon-project/badge.svg?branch=master)](https://coveralls.io/github/darwinsimon/klingon-project?branch=master)
 
 # Klingon Project
 
