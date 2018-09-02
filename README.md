@@ -19,7 +19,7 @@ To show hidden information, add `showas` in the `Character` struct. [Go to file]
 ### Build
 - Install Go. Downloads and instructions are available [here](https://golang.org/dl/).
 - For Windows, run `go get` and `go build` in repository main folder
-- For Unix, run `make`
+- For Unix, run `make` in repository main folder
 
 ### Run
 Run the application with character's name as parameter
