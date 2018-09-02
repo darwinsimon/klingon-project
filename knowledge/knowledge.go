@@ -26,28 +26,9 @@ func Get(param string, src resource.Resource) []string {
 			// Only show if showas isn't blank
 			if showAs != "" {
 				fieldValue := reflect.Indirect(vo).FieldByName(to.Field(i).Name)
-				var infoValue string
 
-				switch fieldValue.Interface().(type) {
-
-				case string:
-					// String information
-					infoValue = fieldValue.String()
-
-					// Blank value
-					if infoValue == "" {
-						infoValue = "No information"
-					}
-
-				case int:
-					// Number information
-					infoValue = fmt.Sprintf("%d", fieldValue.Int())
-
-					// Blank value
-					if infoValue == "0" {
-						infoValue = "No information"
-					}
-				}
+				// Parse field value
+				var infoValue = parseInfoValue(fieldValue)
 
 				infoArr = append(infoArr, fmt.Sprintf("%-20s : %s", showAs, infoValue))
 			}
@@ -67,4 +48,32 @@ func Get(param string, src resource.Resource) []string {
 	}
 
 	return infoArr
+}
+
+// Get value from reflect value
+func parseInfoValue(v reflect.Value) string {
+
+	var infoValue string
+	switch v.Interface().(type) {
+
+	case string:
+		// String information
+		infoValue = v.String()
+
+		// Blank value
+		if infoValue == "" {
+			infoValue = "No information"
+		}
+
+	case int:
+		// Number information
+		infoValue = fmt.Sprintf("%d", v.Int())
+
+		// Blank value
+		if infoValue == "0" {
+			infoValue = "No information"
+		}
+	}
+
+	return infoValue
 }

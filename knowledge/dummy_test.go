@@ -1,6 +1,8 @@
 package knowledge_test
 
-import "github.com/darwinsimon/klingon-project/resource"
+import (
+	"github.com/darwinsimon/klingon-project/resource"
+)
 
 type DummyResource struct{}
 
