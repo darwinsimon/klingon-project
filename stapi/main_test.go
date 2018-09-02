@@ -10,6 +10,6 @@ import (
 var s = Stapi{}
 
 func TestMain(m *testing.M) {
-
+	TestingPatch()
 	os.Exit(m.Run())
 }

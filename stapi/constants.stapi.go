@@ -8,7 +8,7 @@ const maxToleranceResult = 10
 
 // Types of errors for STAPI module
 const (
-	ErrorNone StapiError = iota
+	ErrorNone Error = iota
 	ErrorTooManyResults
 	ErrorCharacterNotFound
 )

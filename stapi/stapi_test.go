@@ -1,6 +1,7 @@
 package stapi_test
 
 import (
+	"os"
 	"testing"
 
 	. "github.com/darwinsimon/klingon-project/stapi"
@@ -92,5 +93,27 @@ func TestCharacterSearchFound2Results(t *testing.T) {
 	assert.Equal(t, "Jean-Luc Picard", character.Name)
 	assert.Equal(t, "Human", character.Species)
 	assert.Equal(t, ErrorNone, err)
+
+	// Remove testing file
+	os.Remove("char.txt")
+
+}
+
+func TestCharacterSearchFoundFromCache(t *testing.T) {
+
+	searchBodyString := `{"page":{"pageNumber":0,"pageSize":50,"numberOfElements":1,"totalElements":1,"totalPages":1,"firstPage":true,"lastPage":true},"sort":{"clauses":[]},"characters":[{"uid":"CHMA0000000000","name":"Darwin Simon","gender":"M"}]}`
+
+	// Mock the API to reply 2 results
+	defer gock.Off()
+	gock.New(RESTURL).Post("character/search").Reply(200).BodyString(searchBodyString)
+
+	character, err := s.CharacterSearch("Darwin")
+	assert.NotNil(t, character)
+	assert.Equal(t, "Darwin", character.Name)
+	assert.Equal(t, "Human", character.Species)
+	assert.Equal(t, ErrorNone, err)
+
+	// Remove testing file
+	os.Remove("char.txt")
 
 }

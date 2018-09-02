@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-type StapiError int
+// Error type for Stapi.co API Calls
+type Error int
 
 // Use global client to prevent increasing open files
 var client = http.Client{

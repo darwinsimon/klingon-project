@@ -29,7 +29,7 @@ func init() {
 }
 
 // CharacterSearch by name
-func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
+func (s Stapi) CharacterSearch(name string) (*Character, Error) {
 
 	// Path for character searching
 	characterSearchPath := "/character/search"
@@ -120,7 +120,7 @@ func (s Stapi) CharacterSearch(name string) (*Character, StapiError) {
 }
 
 // Get detail information about specific character
-func (s Stapi) getCharacter(uid string) (*charResponse, StapiError) {
+func (s Stapi) getCharacter(uid string) (*charResponse, Error) {
 
 	// Path for get character
 	characterSearchPath := "/character?uid=" + uid
