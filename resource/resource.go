@@ -10,6 +10,7 @@ const (
 	ErrorCharacterNotFound
 )
 
+// Resource API for searching character
 type Resource interface {
 	CharacterSearch(name string) (*Character, Error)
 }
