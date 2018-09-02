@@ -12,7 +12,7 @@ Available information:
 - Gender (hidden)
 - Year of Birth (hidden)
 
-To show hidden information, add `showas` in the `Character` struct. [Go to file](resource/stapi/types.stapi.go) 
+To show hidden information, add `showas` in the `Character` struct. [Go to file](resource/types.resource.go) 
 
 ## How To Use
 
