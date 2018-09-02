@@ -128,7 +128,7 @@ func ToKlingon(value string) (string, error) {
 
 	}
 
-	// Seperate each character with space
+	// Separate each character with space
 	return strings.Join(translated, " "), nil
 
 }

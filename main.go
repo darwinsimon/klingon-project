@@ -76,7 +76,7 @@ func getSpecies(param string) string {
 		// Character not found
 		return "No information"
 	default:
-		return "An error occured when retrieving the species information"
+		return "An error occurred when retrieving the species information"
 	}
 
 }
